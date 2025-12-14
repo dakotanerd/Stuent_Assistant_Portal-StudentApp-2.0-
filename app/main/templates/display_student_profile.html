@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% import 'bootstrap_wtf.html' as wtf %}
+
+{% block content %}
+
+<!-- Made by Dakota -->
+{% if current_user.user_type == 'Student' %}
+
+<h1>{{current_user.firstname}}'s Profile </h1>
+
+<div class="border rounded-3 bg-light p-3">
+    <b>Username: </b>{{ current_user.username }}
+    <br> 
+    <br>
+
+    <b>Name:</b>
+    {% if current_user.firstname %}
+        {{ current_user.firstname }}
+    {% endif %}
+    {% if current_user.lastname %}
+        {{ current_user.lastname }}
+    {% endif %}
+    <br>
+    <br>
+
+    <b>Email:</b>
+    {% if current_user.email %}
+        {{ current_user.email }}
+    {% endif %}
+    <br>
+    <br>
+
+    <b>WPI ID:</b>
+    {% if current_user.wpi_id %}
+        {{ current_user.wpi_id }}
+    {% endif %}
+    <br>
+    <br>
+
+    <b>Phone:</b>
+        {% if current_user.phone %}
+            {{ current_user.phone }}
+        {% endif %}
+    <br>
+    <br>
+
+    <b>GPA:</b>
+        {% if current_user.gpa %}
+            {{ current_user.gpa }}
+        {% endif %}
+    <br>
+    <br>
+
+
+    <hr>
+
+    <p><b>Major:</b>
+        {% if current_user.major %}
+            {{ current_user.major }}
+        {% endif %}
+    </p>
+</div>
+<div class="text-center">
+    <form method="GET" action="{{ url_for('main.edit_student_profile') }}">
+        <button type="submit" class="edit_button2">Edit Profile</button>
+    </form>
+</div>
+
+
+<h3>Your Course Applications:</h3>
+
+<div class="border rounded-3 bg-light p-3">
+    {% if applications %}
+        <table class="student_profile_course_application_table">
+            <thead>
+                <tr>
+                    <th>Course Name</th>
+                    <th>Year</th>  
+                    <th>Term</th>       
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in applications %}
+                    <tr>
+                        <td>{{ application.course.title }} - {{ application.course.coursenum }}</td>
+                        <td>{{ application.section.year }}</td>
+                        <td>{{ application.section.term }}</td>
+                        <td>{{ application.reason }}</td>
+                        <td>
+                            {% if application.status %}
+                                {{ application.status }}
+                            {% else %}
+                                Pending
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>
+            You have not applied to be a student assistant for any courses yet. Apply <a href = "{{url_for('main.student_index')}}"> here! </a></p>
+    {% endif %}
+</div>
+
+<!-- Add past enrollment button -->
+
+<div class="text-center">
+    <form method="GET" action="{{ url_for('main.student_index') }}">
+        <button type="submit" class="smaller_right_button mb-3" >View Available Positions</button>
+    </form>
+</div>
+
+<br>
+<h3>Your Past Enrolled Courses:</h3>
+
+
+<div class="border rounded-3 bg-light p-3">
+    {% if enrollments %}
+    <table class="student_profile_course_application_table">
+        <thead>
+            <tr>
+                <th>Course Name</th>
+                <th>Grade</th>
+                <th>SA before</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for enrollment in enrollments %}
+                <tr>
+                    <td>{{ enrollment.course.title }} - {{ enrollment.course.coursenum }}</td>
+                    <td>{{ enrollment.grade }}</td>
+                    <td>
+                        {% if enrollment.sa_before %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
+                    <td>
+                        <!-- Delete Button Form -->
+                        <form method="POST" action="{{ url_for('main.delete_past_enrollment', enrollment_id=enrollment.id) }}" class="d-flex justify-content-center">
+                            {{ wtf.csrf_token }}
+                            <button type="submit" class="cancel_button mt-2 mb-2 " >Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+    {% else %}
+    <p> 
+        You have not listed any of your past enrolled courses yet. Start adding them to your profile <a href = "{{url_for('main.add_course')}}"> here!</p>
+    {% endif %}
+</div>
+
+<!-- Add past enrollment button -->
+
+<div class="text-center">
+    <form method="GET" action="{{ url_for('main.add_course') }}">
+        <button type="submit" class="smaller_right_button" >Add a past enrollment</button>
+    </form>
+</div>
+
+
+{% endif %} 
+
+{% endblock %}

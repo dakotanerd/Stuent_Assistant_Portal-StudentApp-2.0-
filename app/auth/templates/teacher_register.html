@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% import 'bootstrap_wtf.html' as wtf %}
+
+{% block content %}
+<h1>Teacher Registration</h1>
+
+<div class="row">
+    <!-- Form Column -->
+    <div class="col-md-8">
+        <form action="{{ url_for('auth.teacher_register') }}" method="POST">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                <div class="col-md-10">
+                    {{ wtf.form_field(form.username) }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-10">
+                    {{ wtf.form_field(form.firstname) }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-10">
+                    {{ wtf.form_field(form.lastname) }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-10">
+                    {{ wtf.form_field(form.email) }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-10">
+                    {{ wtf.form_field(form.wpi_id) }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-10">
+                    {{ wtf.form_field(form.phone) }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-10">
+                    {{ wtf.form_field(form.department) }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-10">
+                    {{ wtf.form_field(form.password) }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-10">
+                    {{ wtf.form_field(form.password2) }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-10">
+                    {{ wtf.form_field(form.submit) }}
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Image Column with Multiple Images Stacked -->
+    <div class="col-md-4">
+        <!-- First Image -->
+        <div class="mb-1">
+            <img src="{{url_for('static', filename = 'img//gompei-hawaii.png')}}" class="img-fluid" alt="Placeholder Image 1" style="margin-top: -80px;">
+        </div>
+        
+        <!-- Second Image -->
+        <div class="mb-1">
+            <img src="{{url_for('static', filename = 'img//gompei-astronaut.png')}}" class="img-fluid" alt="Placeholder Image 2">
+        </div>
+
+        <!-- Third Image -->
+        <!-- <div class="mb-1">
+            <img src="{{url_for('static', filename = 'img//gompei-jersey.png')}}" class="img-fluid" alt="Placeholder Image 3">
+        </div> -->
+    </div>
+</div>
+
+{% endblock %}

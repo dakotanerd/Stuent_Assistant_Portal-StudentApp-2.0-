@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% import 'bootstrap_wtf.html' as wtf %}
+
+{% block content %}
+<h1>Edit Course</h1>
+
+<form method="POST" action="{{ url_for('main.teacher_edit_course', section_id=section.id) }}">
+    {{ wtf.csrf_token }}
+
+    <div class="form-group">
+        <label for="title">Course Title</label>
+        <input type="text" class="form-control" id="title" name="title" value="{{ section.course.title }}" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="coursenum">Course Number</label>
+        <input type="text" class="form-control" id="coursenum" name="coursenum" value="{{ section.course.coursenum }}" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="year">Year</label>
+        <input type="text" class="form-control" id="year" name="year" value="{{ section.year }}" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="term">Term</label>
+        <input type="text" class="form-control" id="term" name="term" value="{{ section.term }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="min_gpa">Min_GPA</label>
+        <input type="text" class="form-control" id="min_gpa" name="min_gpa" value="{{ section.min_gpa }}" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="sa_num">Number of SAs</label>
+        <input type="number" class="form-control" id="sa_num" name="sa_num" value="{{ section.sa_num }}" required>
+    </div>
+
+    <br>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a href="{{ url_for('main.teacher_index') }}" class="btn btn-secondary">Cancel</a>
+</form>
+
+<hr>
+
+<!-- Delete Section -->
+<form method="POST" action="{{ url_for('main.teacher_delete_section', section_id=section.id) }}">
+    {{ wtf.csrf_token }}
+    <button type="submit" class="btn btn-danger">Delete Course</button>
+</form>
+
+{% endblock %}

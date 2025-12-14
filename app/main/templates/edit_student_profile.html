@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% import 'bootstrap_wtf.html' as wtf %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Edit Your Profile</h2>
+    <form method="post" action="{{ url_for('main.edit_student_profile') }}">
+        {{ form.hidden_tag() }}
+        
+        <!-- First Name Field -->
+        <div class="form-group">
+            <label for="firstname">First Name</label>
+            {{ form.firstname(class="form-control", id="firstname") }}
+            {% if form.firstname.errors %}
+                <ul class="text-danger">
+                    {% for error in form.firstname.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <!-- Last Name Field -->
+        <div class="form-group">
+            <label for="lastname">Last Name</label>
+            {{ form.lastname(class="form-control", id="lastname") }}
+            {% if form.lastname.errors %}
+                <ul class="text-danger">
+                    {% for error in form.lastname.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <!-- Email Field -->
+        <div class="form-group">
+            <label for="email">Email</label>
+            {{ form.email(class="form-control", id="email") }}
+            {% if form.email.errors %}
+                <ul class="text-danger">
+                    {% for error in form.email.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <!-- WPI ID Field -->
+        <div class="form-group">
+            <label for="wpi_id">WPI ID</label>
+            {{ form.wpi_id(class="form-control", id="wpi_id") }}
+            {% if form.wpi_id.errors %}
+                <ul class="text-danger">
+                    {% for error in form.wpi_id.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <!-- Phone Field -->
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            {{ form.phone(class="form-control", id="phone") }}
+            {% if form.phone.errors %}
+                <ul class="text-danger">
+                    {% for error in form.phone.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <!-- GPA Field -->
+        <div class="form-group">
+            <label for="gpa">GPA</label>
+            {{ form.gpa(class="form-control", id="gpa") }}
+            {% if form.gpa.errors %}
+                <ul class="text-danger">
+                    {% for error in form.gpa.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <br>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a href="{{ url_for('main.display_Student_profile') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

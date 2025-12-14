@@ -1,0 +1,105 @@
+<div class="course-section">
+    <table class="coursetable">
+        <tr>
+            {% if current_user.user_type == "Student" %}
+            <td width="100%">
+                <div class="All_Courses_Box">
+                    <div class="course_text">
+                        <div class="course-details">
+                            <h3>{{ course.major }} {{ course.get_coursenum() }} - {{ course.get_title() }}</h3>
+                            <div class="view_button_position">
+                                <!-- Button to toggle sections visibility -->
+                                <button class="view_button" onclick="toggleSections(this)">View</button>
+                            </div>
+                        </div>
+
+                        <!-- Sections container, hidden by default -->
+                        <div class="sections-container" style="display: none;">
+                            {% set sections = course.get_sections() %}
+                            {% set applied_sections = course.get_applied_sections(current_user.id) %}
+
+                            {% set section_counter = sections  | length %} <!-- Initialize the section counter -->
+                            {% set applied_section_counter = course.get_applied_sections(current_user.id)  | length %} <!-- Initialize the section counter -->
+
+                            {% if sections %}
+                                <div class="sections">
+                                    {% for section in sections %}
+                                        {% if section in applied_sections %}
+                                            {% set section_counter = section_counter - 1 %} <!-- Decrement counter for applied sections -->
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% if section_counter - applied_section_counter > 0 %}
+                                        <!-- Show available sections if counter is greater than 0 -->
+                                        {% for section in sections %}
+                                            {% if section not in applied_sections %}
+                                                <div class="section-details3">
+                                                    <div class="items_in_container">
+                                                        <div class="line2"></div>
+                                                        <p><strong>Teacher:</strong> {{ section.teacher.firstname }} {{ section.teacher.lastname }}</p>
+                                                        <p><strong>Teacher Email:</strong> {{ section.teacher.email }}</p>
+                                                        <p><strong>Term:</strong> {{ section.term }}</p>
+                                                        <p><strong>Year:</strong> {{ section.year }}</p>
+                                                        <p><strong>Number of SAs:</strong> {{ section.num_sa }}</p>
+                                                        <p><strong>Min GPA:</strong> {{ section.min_gpa }}</p>
+                                                        <p><strong>Min Grade:</strong> {{ section.min_grade}}</p>
+                                                        <p><strong>Created At:</strong> {{ section.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                                                        <hr>
+                                                        <br>
+
+                                                        {% if accepted_section_ids %}
+                                                            <br>
+                                                            <div class="already_applied_to_section_box">
+                                                                You have already been accepted to a section.
+                                                            </div>
+                                                        {% else %}
+                                                            <div class="apply_button_position2">
+                                                                <a href="{{ url_for('main.application', section_id=section.id) }}">
+                                                                    <button class="apply_button">Apply</button>
+                                                                </a>
+                                                                <br>
+                                                            </div>
+                                                            <br>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="no_sections">
+                                            <p>No sections available for this course.</p>
+                                            <br>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <div class="no_sections">
+                                    <p>No sections available for this course.</p>
+                                    <br>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                    </div>
+                </div>
+            </td>
+            {% endif %}
+        </tr>
+    </table>
+</div>
+
+<script>
+    function toggleSections(button) {
+        // Find the sections container relative to the clicked button
+        const sectionsContainer = button.closest('.course_text').querySelector('.sections-container');
+
+        // Toggle visibility
+        if (sectionsContainer.style.display === 'none') {
+            sectionsContainer.style.display = 'block';
+            button.textContent = 'Hide'; // Change button text
+        } else {
+            sectionsContainer.style.display = 'none';
+            button.textContent = 'View'; // Change button text back
+        }
+    }
+</script>

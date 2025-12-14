@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% import 'bootstrap_wtf.html' as wtf %}
+
+{% block content %}
+    <h1>Create A Course Section</h1>
+
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+	{{wtf.form_field(form.course)}}
+	{{wtf.form_field(form.term)}}
+	{{wtf.form_field(form.year)}}
+    {{wtf.form_field(form.section_num)}}
+    {{wtf.form_field(form.sa_num)}}
+    {{wtf.form_field(form.min_gpa)}}
+    {{wtf.form_field(form.min_grade)}}
+
+	{{wtf.form_field(form.submit)}}
+    </form>
+
+{% endblock %}

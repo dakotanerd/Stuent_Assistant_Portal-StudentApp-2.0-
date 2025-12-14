@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h1 class="mb-4">Apply for {{ section.course.get_title() }} - Section {{ section.id }}</h1>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alert alert-{{ messages[0][0] }}">
+                <strong>{{ messages[0][1] }}</strong>
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Section Details -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <p><strong>Term:</strong> {{ section.term }}</p>
+            <p><strong>Year:</strong> {{ section.year }}</p>
+            <p><strong>Number of SAs:</strong> {{ section.num_sa }}</p>
+        </div>
+    </div>
+
+    <!-- Application Form -->
+    <form method="post" action="{{ url_for('main.application', section_id=section.id) }}">
+        <div class="mb-3">
+            <label for="reason" class="form-label"><strong>Reason for Interest:</strong></label>
+            <textarea 
+                name="reason" 
+                id="reason" 
+                class="form-control" 
+                rows="5" 
+                placeholder="Explain why you're interested in this section" 
+                required></textarea>
+        </div>
+
+        <button type="submit" class="smaller_right_button">Submit Application</button>
+
+        
+    </form>
+</div>
+
+{% endblock %}

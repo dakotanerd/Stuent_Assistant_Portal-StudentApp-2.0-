@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% import 'bootstrap_wtf.html' as wtf %}
+
+{% block content %}
+
+<!-- Made by Dakota -->
+
+<h1> View Profile - {{student.username}} </h1>
+
+<div class="border rounded-3 bg-light p-3">
+    <h2> Username: {{ student.username }}</h2>
+    <b>Name:</b>
+    {% if student.firstname %}
+        {{ student.firstname }}
+    {% endif %}
+    {% if student.lastname %}
+        {{ student.lastname }}
+    {% endif %}
+    <p><b>Email:</b>
+    {% if student.email %}
+        {{ student.email }}
+    {% endif %}
+    </p>
+    <p><b>WPIID:</b>
+    {% if student.wpi_id %}
+        {{ student.wpi_id }}
+    {% endif %}
+    </p>
+    <p><b>Phone:</b>
+        {% if student.phone %}
+            {{ student.phone }}
+        {% endif %}
+    </p>
+    <p><b>GPA:</b>
+        {% if student.gpa %}
+            {{ student.gpa }}
+        {% endif %}
+    </p>
+
+    <hr>
+
+    <p><b>Major:</b>
+        {% if student.major %}
+            {{ student.major }}
+        {% endif %}
+    </p>
+</div>
+<br>
+<!-- Display Application Status -->
+<h3>Course Applications:</h3>
+
+<div class="border rounded-3 bg-light p-3">
+    {% if applications %}
+        <table class="student_profile_course_application_table">
+            <thead>
+                <tr>
+                    <th>Course Name</th>
+                    <th>Section</th>           
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in applications %}
+                    <tr>
+                        <td>{{ application.course.title }} - {{ application.course.coursenum }}</td>
+                        <td>{{ application.section.term }} {{ application.section.year }}</td>
+                        <td>{{ application.reason }}</td>
+                        <td>
+                            {% if application.status %}
+                                {{ application.status }}
+                            {% else %}
+                                Pending
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p> Have not applied to any courses yet.</p>
+    {% endif %}
+</div>
+
+<br>
+
+<h3>Past Enrollments:</h3>
+
+<div class="border rounded-3 bg-light p-3">
+    {% if enrollments %}
+    <table class="student_profile_course_application_table">
+        <thead>
+            <tr>
+                <th>Course Name</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for enrollment in enrollments %}
+                <tr>
+                    <td>{{ enrollment.course.title }} - {{ enrollment.course.coursenum }}</td>
+                    <td>{{ enrollment.grade }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+    {% else %}
+    <p> Have not listed any enrolled courses yet.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

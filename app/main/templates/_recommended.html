@@ -1,0 +1,89 @@
+<div class="course-section">
+    <table class="coursetable">
+        <tr>
+            {% if current_user.user_type == "Student" %}
+            {% if course.id not in applied_course_ids %}
+            <td width="100%">
+                <div class="Recommended_Courses_Box">
+                    <div class="course_text">
+                        <div class="course-details">
+                            <h3>{{ course.major }} {{ course.get_coursenum() }} - {{ course.get_title() }}</h3>
+                            <div class="view_button_position">
+                                <!-- Button to toggle sections visibility -->
+                                <button class="view_button" onclick="toggleSections(this)" aria-expanded="false">View</button>
+                            </div>
+                        </div>
+
+                        <!-- Sections container, hidden by default -->
+                        <div class="sections-container" style="display: none;">
+                            {% if course.get_recommended_sections(current_user.id) %}
+                            <div class="sections">
+                                {% for section in course.get_recommended_sections(current_user.id) %}
+                                    <div class="section-details4">
+                                        <div class="items_in_container">  
+                                            
+                                            <p><strong>Teacher:</strong> {{ section.teacher.firstname }} {{ section.teacher.lastname }}</p>        
+                                            <p><strong>Teacher Email:</strong> {{ section.teacher.email }}</p>        
+                                            <p><strong>Term:</strong> {{ section.term }}</p>
+                                            <p><strong>Year:</strong> {{ section.year }}</p>
+                                            <p><strong>Number of SAs:</strong> {{ section.num_sa }}</p>
+                                            <p><strong>Min GPA:</strong> {{ section.min_gpa }}</p>
+                                            <p><strong>Min grade:</strong> {{ section.min_grade }}</p>
+                                            <p><strong>Created At:</strong> {{ section.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                                            <hr>
+                                            {% if accepted_section_ids %}
+                                               <div class = "already_applied_to_section_box"> You have already been accepted to a section.</div>
+                                            {% else %}
+                                                <div class="apply_button_position2">
+                                                    <a href="{{ url_for('main.application', section_id=section.id) }}">
+                                                        <button class="apply_button">Apply</button>
+                                                    </a>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        </div>
+                                        
+                                        <br>
+                                    </div>                                        
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                                <div class="no_sections">
+                                    <p>No sections available for this course. Please check back later.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </td>
+            {% else %}
+            <td width="100%" height="20px">
+                <div class="courses_box">
+                    <div class="course-details">
+                        <p>This course has already been applied for.</p>
+                    </div>
+                </div>
+            </td>
+            {% endif %}
+            {% else %}
+            <td width="100%" height="20px">
+                <div class="courses_box">
+                    <div class="course-details">
+                        <p>No user type detected, or this is not a student.</p>
+                    </div>
+                </div>
+            </td>
+            {% endif %}
+        </tr>
+    </table>
+</div>
+
+<script>
+    function toggleSections(button) {
+        const sectionsContainer = button.closest('.course_text').querySelector('.sections-container');
+        const isExpanded = sectionsContainer.style.display === 'block';
+        sectionsContainer.style.display = isExpanded ? 'none' : 'block';
+        button.textContent = isExpanded ? 'View' : 'Hide';
+        button.setAttribute('aria-expanded', !isExpanded);
+    }
+</script>

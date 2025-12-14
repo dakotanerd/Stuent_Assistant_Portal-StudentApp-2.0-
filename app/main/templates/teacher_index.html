@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% import 'bootstrap_wtf.html' as wtf %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <div class="mb-4">
+        <h2>My Sections:</h2>
+    </div>
+    
+    {% if messages %}
+        <div class="alert alert-success">
+            {% for category, message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    {% if not sections %}
+        <div class="no_courses_box mb-4">
+            <div class="recommended_box_text">
+                <p>You have no sections, create one <a href="{{ url_for('main.create_section') }}">here!</a></p>
+            </div>
+        </div>
+    {% else %}
+        {% for section_info in sections %}
+        {% set section = section_info['section'] %}
+        <div class="Recommended_Courses_Box">
+            <div class="teacher_course_material">
+                <h4>{{ section_info['course'].title }}: {{ section_info['course'].coursenum }} - {{ section_info['course'].year }}</h4>
+                <p>Number of SAs: {{ section.num_sa }}</p>
+                <div class="course_text2">
+                    <button class="view_button" onclick="toggleStudentList(this)">View</button>
+                </div>
+            </div>
+
+            <div style="display: none; margin-top: 10px; margin-left: 10px;">
+                <hr>
+                <h4>Students Applied:</h4>
+                {% if section_info['applications'] %}
+                    {% for application in section_info['applications'] %}
+                        {% if application.status != 'rejected' %}
+                            <div>
+                                <p>Name: <a href="{{ url_for('main.view_profile', student_id=application.student.id) }}">
+                                    {{ application.student.firstname }} {{ application.student.lastname }}</a></p>
+                              
+                                <p>Reason: {{ application.reason }}</p>
+
+                                {% if application.status == 'pending' %}
+                                    <div class="">
+                                        <form method="POST" action="{{ url_for('main.update_application_status', application_id=application.id) }}">
+                                            {{ wtf.csrf_token }}
+                                            <select name="status">
+                                                <option value="pending" {% if application.status == 'pending' %}selected{% endif %}>Pending</option>
+                                                <option value="accepted" {% if application.status == 'accepted' %}selected{% endif %}>Accepted</option>
+                                                <option value="rejected" {% if application.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                                            </select>
+                                            <button type="submit" class="Update_status_button">Update Status</button>  
+                                        </form>
+                                    </div>
+                                {% endif %}
+
+                                <!-- <div class="teacher_edit_course_button">
+                                    <a href="{{ url_for('main.teacher_edit_course', section_id=section.id) }}">
+                                        <button class="edit_button2">Edit</button>
+                                    </a>
+                                </div> -->
+                                <div class="">
+                                    <a href="{{ url_for('main.teacher_edit_course', section_id=section.id) }}">
+                                        <button class="smaller_right_button mt-negative">Edit Course</button>
+                                    </a>
+                                </div>
+                                <hr>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p>No students have applied to this section yet.</p>
+                    <div class="">
+                        <a href="{{ url_for('main.teacher_edit_course', section_id=section.id) }}">
+                            <button class="smaller_right_button mt-negative">Edit Course</button>
+                        </a>
+                    </div>
+                    <hr>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<script>
+    function toggleStudentList(button) {
+        const studentList = button.closest('.teacher_course_material').nextElementSibling;
+        if (studentList) {
+            studentList.style.display = (studentList.style.display === 'none') ? 'block' : 'none';
+        }
+    }
+</script>
+
+{% endblock %}

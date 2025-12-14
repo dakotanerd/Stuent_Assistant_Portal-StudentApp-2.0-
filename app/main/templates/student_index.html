@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% import 'bootstrap_wtf.html' as wtf %}
+
+{% block content %}
+<!-- Made by Dakota -->
+
+{% if current_user.user_type == 'Student' %}
+ 
+    <br>
+
+    <div class="mb-4"><h2>Current Processing Applications:</h2></div>
+    {% if applied_courses %}
+        {% include '_current_application.html' %}
+    {% else %}
+    <div class="no_courses_box">
+        <div class="recommended_box_text">
+            <p>No applications found.</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <br>
+
+    <!-- Recommended Courses -->
+    <div style="margin-top: 2%;">
+        <div class="mb-4"><h2>Recommended Courses:</h2></div>
+        {% if recommended_courses %}
+            {% for course in recommended_courses %}
+                {% include '_recommended.html' %}
+            {% endfor %}
+        {% else %}
+        <div class="no_courses_box">
+            <div class="recommended_box_text">
+                <p>No recommended courses available.</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <br>
+
+    <!-- All Other Courses (Not Recommended or Already Applied) -->
+    <div style="margin-top: 2%;">
+        <div class="mb-4"><h2>All Courses:</h3></div>
+        {% if courses %}
+            {% for course in courses %}
+                <!-- Check if the student has already applied to the course -->
+                {% if course in applied_courses %}
+                    <div class="course-card applied-course">
+                        <h4>{{ course.title }} (Already Applied)</h4>
+                        <p>You've already applied for this course.</p>
+                    </div>
+                {% else %}
+                    {% include '_course.html' %}
+                {% endif %}
+            {% endfor %}
+        {% else %}
+        <div class="no_courses_box">
+            <div class="recommended_box_text">
+                <p>No other courses available.</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+{% endif %}
+
+{% endblock %}

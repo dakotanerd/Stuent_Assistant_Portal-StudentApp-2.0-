@@ -1,0 +1,93 @@
+
+<div class="course-section">
+    <table class="coursetable">
+        {% if applied_courses|selectattr('status', 'equalto', 'pending')|list|length == 0 %}
+        <!-- No pending applications, show the message -->
+        <tr>
+            <td width="100%">
+                <div class="Application_Courses_Box">
+                    <div class="recommended_box_text">
+                        <p>No applications found.</p>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% else %}
+        <!-- There are pending applications, show them -->
+        {% for application in applied_courses %}
+        {% if application.status == 'pending' %}
+        <tr>
+            <td width="100%">
+                <div class="Application_Courses_Box">
+                    <div class="course_text">
+                        <div class="course-details">
+                            <h3>{{ application.course.major }} {{ application.course.get_coursenum() }} - {{ application.course.get_title() }}</h3>
+                            <div class="view_button_position">
+                                <!-- Button to toggle -->
+                                <button class="view_button" onclick="toggleSections(this)" aria-expanded="false">View</button>
+                            </div>
+                        </div>
+
+                        <!-- Hidden container for application details -->
+                        <div class="sections-container" style="display: none;">
+                            <div class="">
+                                <div class="section-details3">
+                                    <div class="items_in_container ">
+                                        <strong>Teacher:</strong> {{ application.section.teacher.firstname }} {{ application.section.teacher.lastname }}</p>        
+                                        <p><strong>Teacher Email:</strong> {{ application.section.teacher.email }}</p>        
+                                        <p><strong>Student Grade:</strong> {{ application.grade }}</p>
+                                        <p><strong>Reason:</strong> <span class="reason-text">{{ application.reason }}</span></p> <!-- Apply the class here -->
+                                        <p><strong>Year:</strong> {{ application.section.year }}</p>
+                                        <p><strong>Status:</strong> {{ application.status }}</p>
+                                        <p><strong>Min GPA:</strong> {{ application.section.min_gpa }}</p>
+                                        <p><strong>Min grade:</strong> {{ application.section.min_grade }}</p>
+                                        <p><strong>Created At:</strong> {{ application.section.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                                        <div class="">
+                                            <a href="{{ url_for('main.edit_application', application_id=application.id) }}">
+                                                <button class="smaller_right_button ">Edit Application</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Show the edit button only if the application status is "Pending" -->
+                                
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+    </table>
+</div>
+
+<script>
+    // Function to break text into lines after 130 characters
+    document.querySelectorAll('.reason-text').forEach(function (reasonElement) {
+        const reasonText = reasonElement.innerText; // Get the reason text
+        if (reasonText.length > 130) {
+            // Insert a line break after 130 characters
+            reasonElement.innerHTML = reasonText.substring(0, 130) + '<br>' + reasonText.substring(130);
+        }
+    });
+
+    function toggleSections(button) {
+        // Find the nearest 'course_text' container
+        const courseText = button.closest('.course_text');
+
+        // Find the 'sections-container' inside that container
+        const sectionsContainer = courseText.querySelector('.sections-container');
+
+        // Toggle visibility of the sections container
+        if (sectionsContainer.style.display === 'none' || sectionsContainer.style.display === '') {
+            sectionsContainer.style.display = 'block'; // Show
+            button.textContent = 'Hide';  // Change button text to 'Hide'
+        } else {
+            sectionsContainer.style.display = 'none'; // Hide
+            button.textContent = 'View';  // Change button text to 'View'
+        }
+    }
+</script>
